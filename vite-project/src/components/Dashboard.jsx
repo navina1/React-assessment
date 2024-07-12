@@ -43,24 +43,33 @@ function Dashboard() {
             <h2 className="text-xl font-bold mb-4">Upcoming classes</h2>
             <div className="flex justify-between mb-2 text-gray-600">
                 <div>For next 7 days</div>
-                <div>Booked only</div>
+                <div className="flex items-center">
+                    <span>Booked only</span>
+                    <input type="checkbox" className="ml-2 h-4 w-4 text-gray-600" />
+                </div>
             </div>
             <div className="border-t border-gray-200">
                 {/* Table Header */}
                 <div className="w-2/12 text-sm font-bold"></div>
-                <div className="flex items-center py-2 border-b border-gray-200 bg-gray-100">
-                    <div className="w-4/12 text-sm font-bold">Class name</div>
-                    <div className="w-3/12 text-sm font-bold">Staff name</div>
-                    <div className="w-2/12 text-sm font-bold">Actions</div>
-                    <div className="w-2/12 text-sm font-bold"></div>
+                <div className="flex justify-around py-2 border-b border-gray-200 bg-custom-color ">
+                    <div className="w-4/12 text-sm font-bold text-text-color-head">
+                        Class name
+                    </div>
+                    <div className="w-3/12 text-sm font-bold text-text-color-head ">
+                        Staff name
+                    </div>
+                    <div className="w-2/12 text-sm font-bold text-text-color-head ml-2">
+                        Actions
+                    </div>
                 </div>
+                <div className="w-2/12 text-sm font-bold"></div>
                 {/* Table Rows */}
                 {classes.map((classItem, index) => (
                     <div key={classItem.id} className="flex items-center py-4 border-b border-gray-200">
                         <div className="flex items-center w-1/12">
                             <span className="text-sm font-bold">{index + 1}</span>
                         </div>
-                        <div className="flex items-center w-4/12">
+                        <div className="flex flex-col items-start w-4/12">
                             <div className={`text-sm font-bold`}>{classItem.name}</div>
                             <div className={`text-sm ${classItem.status === 'live' ? 'text-red-500' : 'text-gray-500'}`}>{classItem.time}</div>
                         </div>
@@ -72,7 +81,7 @@ function Dashboard() {
                             </div>
                         </div>
                         <div className="flex items-center w-2/12">
-                            
+
                         </div>
                         <div className="w-2/12">
                             <button
