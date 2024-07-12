@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from './Modal';  // Adjust the import path according to your project structure
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
+dayjs.extend(duration);
 
 const classes = [
     { id: 1, name: 'UI/UX Designing', time: '2024-07-12T14:00:00', staff: 'Suriya R', status: 'live' },
@@ -22,6 +26,14 @@ const classes = [
 function Dashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showBookedOnly, setShowBookedOnly] = useState(false);
+    const [now, setNow] = useState(dayjs());
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setNow(dayjs());
+        }, 60000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleBookNowClick = () => {
         setIsModalOpen(true);
@@ -32,7 +44,6 @@ function Dashboard() {
     };
 
     const handleConfirmModal = () => {
-        // Handle the confirm action here
         setIsModalOpen(false);
     };
 
@@ -41,10 +52,18 @@ function Dashboard() {
     };
 
     const getButtonText = (classItem) => {
+        const classTime = dayjs(classItem.time);
+        const diff = classTime.diff(now);
+        const duration = dayjs.duration(diff);
+
         if (classItem.status === 'live') {
             return 'Join now';
-        } else if (classItem.time.includes('Today')) {
-            return `${classItem.countdown}`;
+        } else if (classItem.status === 'booked') {
+            if (classTime.isSame(now, 'day')) {
+                return `${duration.hours()}h ${duration.minutes()}m left`;
+            } else {
+                return `${duration.days()}d ${duration.hours()}h left`;
+            }
         } else {
             return 'Book now';
         }
@@ -61,16 +80,15 @@ function Dashboard() {
                 <div>For next 7 days</div>
                 <div className="flex items-center">
                     <span>Booked only</span>
-                    <input 
-                        type="checkbox" 
-                        className="ml-2 h-4 w-4 text-gray-600" 
-                        checked={showBookedOnly} 
+                    <input
+                        type="checkbox"
+                        className="ml-2 h-4 w-4 text-gray-600"
+                        checked={showBookedOnly}
                         onChange={handleCheckboxChange}
                     />
                 </div>
             </div>
             <div className="border-t border-gray-200">
-                {/* Table Header */}
                 <div className="w-2/12 text-sm font-bold"></div>
                 <div className="flex justify-around py-2 border-b border-gray-200 bg-custom-color ">
                     <div className="w-4/12 text-sm font-bold text-text-color-head">
@@ -84,7 +102,6 @@ function Dashboard() {
                     </div>
                 </div>
                 <div className="w-2/12 text-sm font-bold"></div>
-                {/* Table Rows */}
                 {filteredClasses.map((classItem, index) => (
                     <div key={classItem.id} className="flex items-center py-4 border-b border-gray-200">
                         <div className="flex items-center w-1/12">
@@ -92,7 +109,9 @@ function Dashboard() {
                         </div>
                         <div className="flex flex-col items-start w-4/12">
                             <div className={`text-sm font-bold`}>{classItem.name}</div>
-                            <div className={`text-sm ${classItem.status === 'live' ? 'text-red-500' : 'text-gray-500'}`}>{classItem.time}</div>
+                            <div className={`text-sm ${classItem.status === 'live' ? 'text-red-500' : 'text-gray-500'}`}>
+                                {classItem.status === 'live' ? 'Live' : dayjs(classItem.time).format('DD MMM hh:mm A')}
+                            </div>
                         </div>
                         <div className="flex items-center w-3/12">
                             <img src={`https://via.placeholder.com/40`} alt={classItem.staff} className="rounded-full h-10 w-10" />
