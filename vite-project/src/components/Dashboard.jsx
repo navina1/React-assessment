@@ -26,6 +26,18 @@ function Dashboard() {
         setIsModalOpen(false);
     };
 
+    const getButtonText = (classItem) => {
+        if (classItem.status === 'live') {
+            return 'Join now';
+        } else if (classItem.time.includes('Today')) {
+            return `${classItem.countdown}`;
+        } else {
+            return 'Book now';
+        }
+    };
+
+    const isButtonDisabled = (classItem) => classItem.status === 'booked';
+
     return (
         <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl mx-auto">
             <h2 className="text-xl font-bold mb-4">Upcoming classes</h2>
@@ -60,14 +72,15 @@ function Dashboard() {
                             </div>
                         </div>
                         <div className="flex items-center w-2/12">
-                            {classItem.countdown && <div className="text-sm text-gray-500">{classItem.countdown}</div>}
+                            
                         </div>
                         <div className="w-2/12">
                             <button
-                                className={`py-2 px-4 rounded ${classItem.status === 'booked' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
+                                className={`py-2 px-4 rounded ${isButtonDisabled(classItem) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
                                 onClick={handleBookNowClick}
+                                disabled={isButtonDisabled(classItem)}
                             >
-                                {classItem.buttonText}
+                                {getButtonText(classItem)}
                             </button>
                         </div>
                     </div>
