@@ -2,16 +2,26 @@ import { useState } from 'react';
 import Modal from './Modal';  // Adjust the import path according to your project structure
 
 const classes = [
-    { id: 1, name: 'UI/UX Designing', time: 'Live (0:54)', staff: 'Suriya R', status: 'live', buttonText: 'Join now' },
-    { id: 2, name: 'Graphic Designing', time: 'Today 6pm', staff: 'Priya Sweety', status: 'upcoming', countdown: '2:40:34', buttonText: 'Join now' },
-    { id: 3, name: 'Design Hierarchy', time: '21st June 10am', staff: 'Leslie Alexander', status: 'upcoming', buttonText: 'Book now' },
-    { id: 4, name: 'Basics of Frontend', time: '21st June 4pm', staff: 'Courtney Henry', status: 'upcoming', countdown: '3 days', buttonText: 'Book now' },
-    { id: 5, name: 'Graphic Designing', time: '22nd June 10am', staff: 'Jerome Bell', status: 'booked', buttonText: 'Book now' },
-    { id: 6, name: 'Graphic Designing', time: '23rd June 11am', staff: 'Arlene McCoy', status: 'upcoming', buttonText: 'Book now' },
+    { id: 1, name: 'UI/UX Designing', time: '2024-07-12T14:00:00', staff: 'Suriya R', status: 'live' },
+    { id: 2, name: 'Graphic Designing', time: '2024-07-12T18:00:00', staff: 'Priya Sweety', status: 'upcoming' },
+    { id: 3, name: 'Design Hierarchy', time: '2024-07-21T10:00:00', staff: 'Leslie Alexander', status: 'upcoming' },
+    { id: 4, name: 'Basics of Frontend', time: '2024-07-21T16:00:00', staff: 'Courtney Henry', status: 'upcoming' },
+    { id: 5, name: 'Graphic Designing', time: '2024-07-22T10:00:00', staff: 'Jerome Bell', status: 'booked' },
+    { id: 6, name: 'Graphic Designing', time: '2024-07-23T11:00:00', staff: 'Arlene McCoy', status: 'upcoming' },
+    { id: 7, name: 'Advanced CSS', time: '2024-07-25T14:00:00', staff: 'Jacob Jones', status: 'upcoming' },
+    { id: 8, name: 'React Basics', time: '2024-07-26T10:00:00', staff: 'Annette Black', status: 'upcoming' },
+    { id: 9, name: 'Node.js Introduction', time: '2024-07-27T15:00:00', staff: 'Albert Flores', status: 'upcoming' },
+    { id: 10, name: 'Full-Stack Development', time: '2024-07-28T11:00:00', staff: 'Cameron Williamson', status: 'upcoming' },
+    { id: 11, name: 'Database Management', time: '2024-07-29T16:00:00', staff: 'Eleanor Pena', status: 'upcoming' },
+    { id: 12, name: 'Python for Beginners', time: '2024-07-30T09:00:00', staff: 'Savannah Nguyen', status: 'upcoming' },
+    { id: 13, name: 'Machine Learning', time: '2024-07-01T14:00:00', staff: 'Darlene Robertson', status: 'upcoming' },
+    { id: 14, name: 'Data Structures', time: '2024-07-02T11:00:00', staff: 'Kathryn Murphy', status: 'upcoming' },
+    { id: 15, name: 'Cybersecurity Basics', time: '2024-07-03T17:00:00', staff: 'Dianne Russell', status: 'upcoming' },
 ];
 
 function Dashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showBookedOnly, setShowBookedOnly] = useState(false);
 
     const handleBookNowClick = () => {
         setIsModalOpen(true);
@@ -26,6 +36,10 @@ function Dashboard() {
         setIsModalOpen(false);
     };
 
+    const handleCheckboxChange = () => {
+        setShowBookedOnly(!showBookedOnly);
+    };
+
     const getButtonText = (classItem) => {
         if (classItem.status === 'live') {
             return 'Join now';
@@ -38,6 +52,8 @@ function Dashboard() {
 
     const isButtonDisabled = (classItem) => classItem.status === 'booked';
 
+    const filteredClasses = showBookedOnly ? classes.filter(classItem => classItem.status === 'booked') : classes;
+
     return (
         <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl mx-auto">
             <h2 className="text-xl font-bold mb-4">Upcoming classes</h2>
@@ -45,7 +61,12 @@ function Dashboard() {
                 <div>For next 7 days</div>
                 <div className="flex items-center">
                     <span>Booked only</span>
-                    <input type="checkbox" className="ml-2 h-4 w-4 text-gray-600" />
+                    <input 
+                        type="checkbox" 
+                        className="ml-2 h-4 w-4 text-gray-600" 
+                        checked={showBookedOnly} 
+                        onChange={handleCheckboxChange}
+                    />
                 </div>
             </div>
             <div className="border-t border-gray-200">
@@ -64,7 +85,7 @@ function Dashboard() {
                 </div>
                 <div className="w-2/12 text-sm font-bold"></div>
                 {/* Table Rows */}
-                {classes.map((classItem, index) => (
+                {filteredClasses.map((classItem, index) => (
                     <div key={classItem.id} className="flex items-center py-4 border-b border-gray-200">
                         <div className="flex items-center w-1/12">
                             <span className="text-sm font-bold">{index + 1}</span>
@@ -80,9 +101,7 @@ function Dashboard() {
                                 <div className="text-sm text-gray-500">Additional details</div>
                             </div>
                         </div>
-                        <div className="flex items-center w-2/12">
-
-                        </div>
+                        <div className="flex items-center w-2/12"></div>
                         <div className="w-2/12">
                             <button
                                 className={`py-2 px-4 rounded ${isButtonDisabled(classItem) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
