@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import Modal from './Modal';  // Adjust the import path according to your project structure
+
 const classes = [
     { id: 1, name: 'UI/UX Designing', time: 'Live (0:54)', staff: 'Suriya R', status: 'live', buttonText: 'Join now' },
     { id: 2, name: 'Graphic Designing', time: 'Today 6pm', staff: 'Priya Sweety', status: 'upcoming', countdown: '2:40:34', buttonText: 'Join now' },
@@ -8,6 +11,21 @@ const classes = [
 ];
 
 function Dashboard() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleBookNowClick = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleConfirmModal = () => {
+        // Handle the confirm action here
+        setIsModalOpen(false);
+    };
+
     return (
         <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl mx-auto">
             <h2 className="text-xl font-bold mb-4">Upcoming classes</h2>
@@ -45,15 +63,19 @@ function Dashboard() {
                             {classItem.countdown && <div className="text-sm text-gray-500">{classItem.countdown}</div>}
                         </div>
                         <div className="w-2/12">
-                            <button className={`py-2 px-4 rounded ${classItem.status === 'booked' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-700'}`}>
+                            <button
+                                className={`py-2 px-4 rounded ${classItem.status === 'booked' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
+                                onClick={handleBookNowClick}
+                            >
                                 {classItem.buttonText}
                             </button>
                         </div>
                     </div>
                 ))}
             </div>
+            <Modal isOpen={isModalOpen} onClose={handleCloseModal} onConfirm={handleConfirmModal} />
         </div>
     );
 }
 
-export default Dashboard
+export default Dashboard;
